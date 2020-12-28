@@ -1,3 +1,4 @@
+import os
 import threading
 import time
 
@@ -126,6 +127,19 @@ class ArrowShiftHandler(Handler):
 
     def stop(self):
         self._active = False
+
+
+class CmdHandler(Handler):
+    "Execute a system command on key press."
+
+    def __init__(self, cmd):
+        self._cmd = cmd
+
+    def push(self, event):
+        os.system(self._cmd)
+
+    def release(self, event):
+        pass
 
 
 class ProxyHandler(Handler):
