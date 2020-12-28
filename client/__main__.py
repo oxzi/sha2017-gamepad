@@ -1,3 +1,4 @@
+import argparse
 import socket
 
 from pynput.keyboard import Key as kbd_key
@@ -7,6 +8,21 @@ from client.proto import Keys, unpack_event
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        prog="sha2017-gamepad", description="SHA2017 badge gamepad"
+    )
+
+    parser.add_argument("host", type=str, help="Badge's host resp. IP")
+    parser.add_argument(
+        "port",
+        nargs="?",
+        type=int,
+        default=2342,
+        help="Badge's port, defaults to %(default)s",
+    )
+
+    args = parser.parse_args()
+
     arrow_handler = ArrowShiftHandler(Keys.BTN_A, 0.1)
     mic_toggle_handler = CmdHandler("amixer -c 0 set Capture toggle")
 
@@ -16,7 +32,7 @@ def main():
     proxy.register(Keys.BTN_START, mic_toggle_handler)
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        sock.connect(("10.128.20.186", 2342))
+        sock.connect((args.host, args.port))
         while True:
             try:
                 event = unpack_event(sock.recv(1))
