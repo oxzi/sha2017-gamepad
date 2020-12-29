@@ -23,7 +23,7 @@ def main():
 
     args = parser.parse_args()
 
-    arrow_handler = ArrowShiftHandler(Keys.BTN_A, 0.1)
+    arrow_handler = ArrowShiftHandler(Keys.BTN_A)
     enter_handler = KeystrokeHandler(kbd_key.enter)
     mic_toggle_handler = CmdHandler("amixer -c 0 set Capture toggle")
 

@@ -79,8 +79,7 @@ class ArrowShiftHandler(Handler):
         This handler was especially written to play Work Adventure on the rC3.
     """
 
-    def __init__(self, badge_shift_key, interval):
-        self._interval = interval
+    def __init__(self, badge_shift_key):
         self._keyboard = keyboard.Controller()
 
         self._key = None
@@ -109,17 +108,19 @@ class ArrowShiftHandler(Handler):
             k = self._key
 
             if not k:
-                time.sleep(self._interval)
+                time.sleep(0.05)
                 continue
 
             if self._shift:
                 with self._keyboard.pressed(keyboard.Key.shift):
                     self._keyboard.press(k)
-                    time.sleep(self._interval)
+                    while self._key == k and self._shift:
+                        time.sleep(0.05)
                     self._keyboard.release(k)
             else:
                 self._keyboard.press(k)
-                time.sleep(self._interval)
+                while self._key == k and not self._shift:
+                    time.sleep(0.05)
                 self._keyboard.release(k)
 
     def handle(self, event):
